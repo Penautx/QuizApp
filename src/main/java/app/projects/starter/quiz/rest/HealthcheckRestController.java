@@ -13,6 +13,7 @@ public class HealthcheckRestController {
 
     @GetMapping
     public HealthCheckDto healthCheck() {
+
         return new HealthCheckDto(true, "It is working");
     }
 }
