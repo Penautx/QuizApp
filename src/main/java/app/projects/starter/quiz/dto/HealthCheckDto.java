@@ -12,10 +12,12 @@ public class HealthCheckDto {
     }
 
     public boolean isStatus () {
+
         return status;
     }
 
     public String getMessage () {
+
         return message;
     }
 }
