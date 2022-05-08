@@ -1,5 +1,6 @@
 package app.projects.starter.quiz.frontend;
 
+import app.projects.starter.quiz.services.OngoingGameService;
 import app.projects.starter.quiz.services.QuizDataService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ public class FrontendController {
 
     @Autowired
     private QuizDataService quizDataService;
+    @Autowired
+    private OngoingGameService ongoingGameService;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -31,6 +34,25 @@ public class FrontendController {
     @PostMapping("/select")
     public String postSelectform(Model model, @ModelAttribute GameOptions gameOptions) {
         log.info("Form submitted with data: " + gameOptions);
-        return "index";
+        ongoingGameService.init(gameOptions);
+        return "redirect:game";
+    }
+    @GetMapping("/game")
+    public String game(Model model){
+        model.addAttribute("userAnswer", new UserAnswer());
+        model.addAttribute("currentQuestionNumber", ongoingGameService.getCurrentQuestionIndex());
+        model.addAttribute("totalQuestionNumber", ongoingGameService.getTotalQuestionNumber());
+        model.addAttribute("currentQuestionAnswers", ongoingGameService.getCurrentQuestionAnswersInRandomOrder());
+        model.addAttribute("currentQuestion",ongoingGameService.getCurrentQuestion());
+        return "game";
+    }
+    @PostMapping("/game")
+    public String postSelectForm(Model model, @ModelAttribute UserAnswer userAnswer) {
+        ongoingGameService.checkAnswerForCurrentQuestionAndUpdatePoints(userAnswer.getAnswer());
+        if (ongoingGameService.proceedToNextQuestion()) {
+            return "redirect:game";
+        } else {
+            return "redirect:";
+        }
     }
 }
