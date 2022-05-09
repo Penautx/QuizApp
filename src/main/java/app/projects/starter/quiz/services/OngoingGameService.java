@@ -1,20 +1,26 @@
 package app.projects.starter.quiz.services;
 
 import app.projects.starter.quiz.dto.QuestionsDto;
+import app.projects.starter.quiz.frontend.Difficulty;
 import app.projects.starter.quiz.frontend.GameOptions;
+import lombok.Getter;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Log
+@SessionScope
 public class OngoingGameService {
     private GameOptions gameOptions;
     private int currentQuestionIndex;
+    @Getter
     private int points;
     private List<QuestionsDto.QuestionDto> questions;
 
@@ -67,4 +73,18 @@ public class OngoingGameService {
         currentQuestionIndex++;
         return currentQuestionIndex < questions.size();
     }
+
+    public Difficulty getDifficulty() {
+        return gameOptions.getDifficulty();
+    }
+
+    public String getCategoryName() {
+        Optional<String> category = quizDataService.getQuizCategories().stream()
+                .filter(categoryDto -> categoryDto.getId() == gameOptions.getCategoryId())
+                .map(categoryDto -> categoryDto.getName())
+                .findAny();
+        return category.orElse(null);
+    }
+
+
 }
