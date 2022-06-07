@@ -2,7 +2,6 @@ package app.projects.starter.quiz.frontend;
 
 import lombok.Data;
 
-import static app.projects.starter.quiz.frontend.Difficulty.*;
 
 @Data
 public class GameOptions {

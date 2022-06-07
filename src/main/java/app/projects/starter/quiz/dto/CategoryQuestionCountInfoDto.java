@@ -30,9 +30,6 @@ public class CategoryQuestionCountInfoDto {
         @JsonProperty("totalHardQuestionCount")
         private int totalHardQuestionCount;
     }
-    public int getTotalQuestionCount() {
-        return categoryQuestionCount.totalQuestionCount;
-    }
 
     public int getQuestionCountForDifficulty(Difficulty difficulty) {
         switch (difficulty) {
